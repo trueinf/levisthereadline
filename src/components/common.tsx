@@ -1,0 +1,106 @@
+import type { CSSProperties, ReactNode } from 'react'
+import { useApp } from '../context'
+import { s } from '../style'
+import type { CampaignTabId } from '../data'
+
+/** Maps a status label to the CSS modifier class used in the prototype. */
+export function statusClass(label: string): string {
+  if (label === 'Ready' || label === 'Approved' || label === 'Published') return 'ready'
+  if (label === 'At Risk' || label === 'In review' || label === 'Scheduled') return 'risk'
+  if (label === 'Blocked' || label === 'Paused' || label === 'Failed') return 'blocked'
+  return 'neutral'
+}
+
+export function Status({ label }: { label: string }) {
+  return <span className={`status ${statusClass(label)}`}>{label}</span>
+}
+
+/**
+ * Generic action button. With no `onClick`, it fires the prototype toast using
+ * its own label text — mirroring the original `data-action="toast"` behavior.
+ */
+export function Btn({
+  label,
+  cls = 'btn-primary',
+  onClick,
+  style,
+}: {
+  label: string
+  cls?: string
+  onClick?: () => void
+  style?: CSSProperties
+}) {
+  const { toast } = useApp()
+  return (
+    <button className={`btn ${cls}`} style={style} onClick={onClick ?? (() => toast(`${label} — prototype action`))}>
+      {label}
+    </button>
+  )
+}
+
+/** Convenience wrapper: button that opens the campaign workspace at a tab. */
+export function TabBtn({ tab, cls = 'btn-primary', style, children }: { tab: CampaignTabId; cls?: string; style?: CSSProperties; children: ReactNode }) {
+  const { setCampaignTab } = useApp()
+  return (
+    <button className={`btn ${cls}`} style={style} onClick={() => setCampaignTab(tab)}>
+      {children}
+    </button>
+  )
+}
+
+/** Button that opens a variant drawer. */
+export function VariantBtn({ variantId, cls = 'btn-dark btn-sm', style, children }: { variantId: string; cls?: string; style?: CSSProperties; children: ReactNode }) {
+  const { openVariant } = useApp()
+  return (
+    <button className={`btn ${cls}`} style={style} onClick={() => openVariant(variantId)}>
+      {children}
+    </button>
+  )
+}
+
+export function PageHeader({
+  eyebrow,
+  title,
+  sub,
+  action,
+}: {
+  eyebrow: string
+  title: string
+  sub: string
+  action?: ReactNode
+}) {
+  return (
+    <div className="page-header">
+      <div>
+        <div className="eyebrow">{eyebrow}</div>
+        <h1>{title}</h1>
+        <p className="subhead">{sub}</p>
+      </div>
+      {action}
+    </div>
+  )
+}
+
+export function CampaignCards() {
+  const { navigate } = useApp()
+  return (
+    <div className="grid grid-4">
+      <article className="card campaign-card soft-lift" style={s('cursor:pointer')} onClick={() => navigate('campaign', 'overview')}>
+        <div className="campaign-art"><span className="status risk">At Risk</span><div className="corner" /></div>
+        <div className="content"><h3>Behind Every Original</h3><div className="meta-row"><span>4 markets</span><span>18 variants</span></div><div className="progress" style={s('margin-top:16px')}><span style={s('width:72%')} /></div></div>
+      </article>
+      <article className="card campaign-card soft-lift">
+        <div className="campaign-art alt"><span className="status review">Partner review</span><div className="corner" /></div>
+        <div className="content"><h3>Football Federation Partnerships</h3><div className="meta-row"><span>4 federations</span><span>Launch orchestration</span></div><div className="progress" style={s('margin-top:16px')}><span style={s('width:58%')} /></div></div>
+      </article>
+      <article className="card campaign-card soft-lift">
+        <div className="campaign-art gold"><span className="status blocked">Claim blocked</span><div className="corner" /></div>
+        <div className="content"><h3>501® Thermodapt</h3><div className="meta-row"><span>Product innovation</span><span>3 markets</span></div><div className="progress" style={s('margin-top:16px')}><span style={s('width:44%')} /></div></div>
+      </article>
+      <article className="card campaign-card soft-lift">
+        <div className="campaign-art purple"><span className="status neutral">Historical</span><div className="corner" /></div>
+        <div className="content"><h3>REIIMAGINE / Denim Cowboy</h3><div className="meta-row"><span>Content memory</span><span>Learning</span></div><div className="progress" style={s('margin-top:16px')}><span style={s('width:100%')} /></div></div>
+      </article>
+    </div>
+  )
+}
