@@ -26,3 +26,7 @@ dist-ssr
 # TS build info
 *.tsbuildinfo
 node_modules/.tmp
+
+# tsc composite build artifacts from vite.config.ts
+vite.config.js
+vite.config.d.ts
