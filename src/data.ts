@@ -260,6 +260,8 @@ export interface WorkspaceCampaign {
   status: string
   /** optional hero/card image (served from /public); falls back to a gradient */
   image?: string
+  /** CSS background-position for the image (default "center"); use to avoid cropping faces */
+  imagePosition?: string
   objective: string
   products: string
   markets: string
@@ -318,6 +320,7 @@ export const workspaceCampaigns: Record<string, WorkspaceCampaign> = {
     subtitle: 'Product innovation · 3 markets · 2026',
     status: 'Blocked',
     image: '/thermodapt-hero.png',
+    imagePosition: 'center top',
     objective: 'Launch the 501® Thermodapt with temperature-regulation storytelling grounded in approved evidence.',
     products: '501® Thermodapt',
     markets: 'United States, France and Japan',

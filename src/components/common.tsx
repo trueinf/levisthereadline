@@ -111,7 +111,7 @@ export function CampaignCards() {
         <div className="content"><h3>Football Federation Partnerships</h3><div className="meta-row"><span>4 federations</span><span>Launch orchestration</span></div><div className="progress" style={s('margin-top:16px')}><span style={s('width:58%')} /></div></div>
       </article>
       <article className="card campaign-card soft-lift" style={s('cursor:pointer')} onClick={() => openWorkspace('thermodapt')}>
-        <div className="campaign-art gold" style={s('background:url(/thermodapt-hero.png) center/cover no-repeat, linear-gradient(135deg,#231f18,#8d7042 55%,#e0c692)')}><span className="status blocked">Claim blocked</span><div className="corner" /></div>
+        <div className="campaign-art gold" style={s('background:url(/thermodapt-hero.png) center top/cover no-repeat, linear-gradient(135deg,#231f18,#8d7042 55%,#e0c692)')}><span className="status blocked">Claim blocked</span><div className="corner" /></div>
         <div className="content"><h3>501® Thermodapt</h3><div className="meta-row"><span>Product innovation</span><span>3 markets</span></div><div className="progress" style={s('margin-top:16px')}><span style={s('width:44%')} /></div></div>
       </article>
       <article className="card campaign-card soft-lift" style={s('cursor:pointer')} onClick={() => openWorkspace('reimagine')}>
