@@ -3,7 +3,7 @@ import { s } from '../style'
 import { CampaignCards, PageHeader, VariantBtn } from '../components/common'
 
 export function Home() {
-  const { navigate, setCampaignTab } = useApp()
+  const { navigate, openWorkspace } = useApp()
   return (
     <div className="page">
       <PageHeader
@@ -23,8 +23,8 @@ export function Home() {
             <div><b>3</b><span>Issues need action</span></div>
           </div>
           <div className="hero-actions">
-            <button className="btn btn-light" onClick={() => setCampaignTab('brief')}>Open brief</button>
-            <button className="btn btn-ghost" onClick={() => setCampaignTab('readiness')}>View readiness</button>
+            <button className="btn btn-light" onClick={() => openWorkspace('beo', 'brief')}>Open brief</button>
+            <button className="btn btn-ghost" onClick={() => openWorkspace('beo', 'readiness')}>View readiness</button>
           </div>
         </div>
       </section>

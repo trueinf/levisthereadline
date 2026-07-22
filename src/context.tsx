@@ -52,7 +52,7 @@ interface AppState {
   addImage: (image: GeneratedImage) => void
   openImageViewer: (id: string) => void
   closeImageViewer: () => void
-  openWorkspace: (id: string) => void
+  openWorkspace: (id: string, tab?: CampaignTabId) => void
   openVariant: (variantId: string) => void
   openCreate: () => void
   closeCreate: () => void
@@ -85,10 +85,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
     window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior })
   }, [])
   const closeImageViewer = useCallback(() => setViewerImageId(null), [])
-  const openWorkspace = useCallback((id: string) => {
+  const openWorkspace = useCallback((id: string, tab: CampaignTabId = 'overview') => {
     setWorkspaceCampaignId(id)
     setPage('campaign')
-    setCampaignTabState('overview')
+    setCampaignTabState(tab)
     setCreateOpen(false)
     setBuilderId(null)
     setViewerImageId(null)
