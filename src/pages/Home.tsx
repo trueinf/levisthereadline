@@ -12,7 +12,7 @@ export function Home() {
         sub="Threadline has reviewed campaign readiness, approvals and market exceptions across your active portfolio."
         action={<span className="prototype-note">Prototype operational data</span>}
       />
-      <section className="hero soft-lift">
+      <section className="hero has-image soft-lift" style={s('background:linear-gradient(90deg,rgba(10,10,10,.92) 0%,rgba(10,10,10,.55) 50%,rgba(10,10,10,.12) 100%), url(/campaign-hero.webp) center top/cover no-repeat')}>
         <div className="hero-copy">
           <span className="tag">Priority campaign · 2026</span>
           <h1>Behind Every Original</h1>
