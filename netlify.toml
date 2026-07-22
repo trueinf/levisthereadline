@@ -1,0 +1,25 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+  functions = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Route the app's /api calls to the serverless functions (order matters:
+# these must come before the SPA fallback below).
+[[redirects]]
+  from = "/api/generate"
+  to = "/.netlify/functions/generate"
+  status = 200
+
+[[redirects]]
+  from = "/api/image"
+  to = "/.netlify/functions/image"
+  status = 200
+
+# SPA fallback — serve index.html for all other routes.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
