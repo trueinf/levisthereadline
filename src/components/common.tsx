@@ -103,7 +103,7 @@ export function CampaignCards() {
         )
       })}
       <article className="card campaign-card soft-lift" style={s('cursor:pointer')} onClick={() => openWorkspace('beo')}>
-        <div className="campaign-art"><span className="status risk">At Risk</span><div className="corner" /></div>
+        <div className="campaign-art" style={s('background:url(/campaign-hero.webp) center/cover no-repeat, linear-gradient(135deg,#111,#8e4034 60%,#d7b69e)')}><span className="status risk">At Risk</span><div className="corner" /></div>
         <div className="content"><h3>Behind Every Original</h3><div className="meta-row"><span>4 markets</span><span>18 variants</span></div><div className="progress" style={s('margin-top:16px')}><span style={s('width:72%')} /></div></div>
       </article>
       <article className="card campaign-card soft-lift" style={s('cursor:pointer')} onClick={() => openWorkspace('football')}>

@@ -10,12 +10,12 @@ export function Overview() {
     <>
       <section className="card card-pad" style={s('padding:0;overflow:hidden;margin-bottom:18px')}>
         <div style={s('display:grid;grid-template-columns:minmax(0,1.2fr) minmax(380px,.8fr)')}>
-          <div style={s('min-height:315px;position:relative;overflow:hidden;background:linear-gradient(90deg,rgba(15,15,15,.06),rgba(15,15,15,.18)),linear-gradient(135deg,#2b1715 0%,#7c463a 58%,#d5b097 100%)')}>
+          <div style={s(`min-height:315px;position:relative;overflow:hidden;background:${c.image ? `linear-gradient(to top, rgba(0,0,0,.72) 0%, rgba(0,0,0,.15) 52%, rgba(0,0,0,.05) 100%), url(${c.image}) center/cover no-repeat, linear-gradient(135deg,#2b1715 0%,#7c463a 58%,#d5b097 100%)` : 'linear-gradient(90deg,rgba(15,15,15,.06),rgba(15,15,15,.18)),linear-gradient(135deg,#2b1715 0%,#7c463a 58%,#d5b097 100%)'}`)}>
             <div style={s('position:absolute;left:34px;top:30px;color:#fff;z-index:2')}>
               <span className="tag" style={s('display:inline-flex;padding:6px 10px;border:1px solid rgba(255,255,255,.45);border-radius:99px;font-size:11px;text-transform:uppercase;letter-spacing:1px')}>Approved campaign visual</span>
             </div>
-            <div style={s('position:absolute;right:9%;top:11%;width:220px;height:270px;border-radius:110px 110px 30px 30px;background:rgba(255,255,255,.20);transform:rotate(-5deg)')} />
-            <div style={s('position:absolute;right:5%;bottom:20px;width:330px;height:74px;background:rgba(10,10,10,.48)')} />
+            {!c.image && <div style={s('position:absolute;right:9%;top:11%;width:220px;height:270px;border-radius:110px 110px 30px 30px;background:rgba(255,255,255,.20);transform:rotate(-5deg)')} />}
+            {!c.image && <div style={s('position:absolute;right:5%;bottom:20px;width:330px;height:74px;background:rgba(10,10,10,.48)')} />}
             <div style={s('position:absolute;left:34px;bottom:30px;color:#fff;z-index:2')}>
               <div style={s('font-size:12px;letter-spacing:1.2px;text-transform:uppercase;opacity:.78;margin-bottom:6px')}>{c.subtitle}</div>
               <div style={s('font-size:34px;font-weight:850;letter-spacing:-1.4px')}>{c.name}</div>

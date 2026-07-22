@@ -258,6 +258,8 @@ export interface WorkspaceCampaign {
   /** header line under the title, e.g. "Global campaign · 4 markets · Feb–Mar 2026" */
   subtitle: string
   status: string
+  /** optional hero/card image (served from /public); falls back to a gradient */
+  image?: string
   objective: string
   products: string
   markets: string
@@ -279,6 +281,7 @@ export const workspaceCampaigns: Record<string, WorkspaceCampaign> = {
     name: 'Behind Every Original',
     subtitle: 'Global campaign · 4 markets · Feb–Mar 2026',
     status: 'At Risk',
+    image: '/campaign-hero.webp',
     objective: 'Celebrate original voices shaping culture and connect their stories to Levi’s products and self-expression.',
     products: 'Low Slim Bootcut, 578™ Baggy, Relaxed Trucker',
     markets: 'United States, France, Japan and India',
