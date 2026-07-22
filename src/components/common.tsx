@@ -103,19 +103,19 @@ export function CampaignCards() {
         )
       })}
       <article className="card campaign-card soft-lift" style={s('cursor:pointer')} onClick={() => openWorkspace('beo')}>
-        <div className="campaign-art" style={s('background:url(/campaign-hero.webp) center/cover no-repeat, linear-gradient(135deg,#111,#8e4034 60%,#d7b69e)')}><span className="status risk">At Risk</span><div className="corner" /></div>
+        <div className="campaign-art" style={s('background:url(/campaign-hero.webp) center/cover no-repeat, linear-gradient(135deg,#111,#8e4034 60%,#d7b69e)')}><div className="corner" /></div>
         <div className="content"><h3>Behind Every Original</h3><div className="meta-row"><span>4 markets</span><span>18 variants</span></div><div className="progress" style={s('margin-top:16px')}><span style={s('width:72%')} /></div></div>
       </article>
       <article className="card campaign-card soft-lift" style={s('cursor:pointer')} onClick={() => openWorkspace('football')}>
-        <div className="campaign-art alt" style={s('background:url(/football-hero.jpg) center/cover no-repeat, linear-gradient(135deg,#0d1a28,#315a75 60%,#a6c4d6)')}><span className="status review">Partner review</span><div className="corner" /></div>
+        <div className="campaign-art alt" style={s('background:url(/football-hero.jpg) center/cover no-repeat, linear-gradient(135deg,#0d1a28,#315a75 60%,#a6c4d6)')}><div className="corner" /></div>
         <div className="content"><h3>Football Federation Partnerships</h3><div className="meta-row"><span>4 federations</span><span>Launch orchestration</span></div><div className="progress" style={s('margin-top:16px')}><span style={s('width:58%')} /></div></div>
       </article>
       <article className="card campaign-card soft-lift" style={s('cursor:pointer')} onClick={() => openWorkspace('thermodapt')}>
-        <div className="campaign-art gold" style={s('background:url(/thermodapt-hero.png) center top/cover no-repeat, linear-gradient(135deg,#231f18,#8d7042 55%,#e0c692)')}><span className="status blocked">Claim blocked</span><div className="corner" /></div>
+        <div className="campaign-art gold" style={s('background:url(/thermodapt-hero.png) center top/cover no-repeat, linear-gradient(135deg,#231f18,#8d7042 55%,#e0c692)')}><div className="corner" /></div>
         <div className="content"><h3>501® Thermodapt</h3><div className="meta-row"><span>Product innovation</span><span>3 markets</span></div><div className="progress" style={s('margin-top:16px')}><span style={s('width:44%')} /></div></div>
       </article>
       <article className="card campaign-card soft-lift" style={s('cursor:pointer')} onClick={() => openWorkspace('reimagine')}>
-        <div className="campaign-art purple" style={s('background:url(/denim-cowboy-hero.jpg) center/cover no-repeat, linear-gradient(135deg,#170f19,#5c315f 55%,#d1a5cd)')}><span className="status neutral">Historical</span><div className="corner" /></div>
+        <div className="campaign-art purple" style={s('background:url(/denim-cowboy-hero.jpg) center/cover no-repeat, linear-gradient(135deg,#170f19,#5c315f 55%,#d1a5cd)')}><div className="corner" /></div>
         <div className="content"><h3>REIIMAGINE / Denim Cowboy</h3><div className="meta-row"><span>Content memory</span><span>Learning</span></div><div className="progress" style={s('margin-top:16px')}><span style={s('width:100%')} /></div></div>
       </article>
     </div>
