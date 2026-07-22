@@ -11,9 +11,12 @@ import { Approvals } from './pages/Approvals'
 import { Insights } from './pages/Insights'
 import { Activity } from './pages/Activity'
 import { Integrations } from './pages/Integrations'
+import { CreatePackage } from './pages/CreatePackage'
+import { CreateCampaign } from './pages/CreateCampaign'
+import { ImageViewer } from './pages/ImageViewer'
 
 export function App() {
-  const { page } = useApp()
+  const { page, createOpen, builderId, viewerImageId } = useApp()
 
   return (
     <>
@@ -21,14 +24,24 @@ export function App() {
         <Sidebar />
         <Topbar />
         <main>
-          {page === 'home' && <Home />}
-          {page === 'campaigns' && <Campaigns />}
-          {page === 'campaign' && <Campaign />}
-          {page === 'library' && <Library />}
-          {page === 'approvals' && <Approvals />}
-          {page === 'insights' && <Insights />}
-          {page === 'activity' && <Activity />}
-          {page === 'integrations' && <Integrations />}
+          {viewerImageId != null ? (
+            <ImageViewer />
+          ) : builderId != null ? (
+            <CreateCampaign />
+          ) : createOpen ? (
+            <CreatePackage />
+          ) : (
+            <>
+              {page === 'home' && <Home />}
+              {page === 'campaigns' && <Campaigns />}
+              {page === 'campaign' && <Campaign />}
+              {page === 'library' && <Library />}
+              {page === 'approvals' && <Approvals />}
+              {page === 'insights' && <Insights />}
+              {page === 'activity' && <Activity />}
+              {page === 'integrations' && <Integrations />}
+            </>
+          )}
         </main>
       </div>
       <Drawer />

@@ -1,7 +1,7 @@
 import { useApp } from '../context'
 import { s } from '../style'
 import { Btn, Status } from '../components/common'
-import { campaignTabs } from '../data'
+import { campaignTabs, workspaceCampaigns } from '../data'
 import { Overview } from './campaign/Overview'
 import { Brief } from './campaign/Brief'
 import { Readiness } from './campaign/Readiness'
@@ -15,12 +15,13 @@ import { Activate } from './campaign/Activate'
 import { Learn } from './campaign/Learn'
 
 function CampaignNav() {
-  const { campaignTab, setCampaignTab } = useApp()
+  const { campaignTab, setCampaignTab, workspaceCampaignId } = useApp()
+  const c = workspaceCampaigns[workspaceCampaignId] ?? workspaceCampaigns.beo
   return (
     <>
       <div className="campaign-head">
-        <div className="campaign-title"><div className="campaign-symbol" /><div><h1>Behind Every Original</h1><p>Global campaign · 4 markets · Feb–Mar 2026</p></div></div>
-        <div style={s('display:flex;gap:10px;align-items:center')}><Status label="At Risk" /> <Btn label="Review recommended actions" cls="btn-primary" /></div>
+        <div className="campaign-title"><div className="campaign-symbol" /><div><h1>{c.name}</h1><p>{c.subtitle}</p></div></div>
+        <div style={s('display:flex;gap:10px;align-items:center')}><Status label={c.status} /> <Btn label="Review recommended actions" cls="btn-primary" /></div>
       </div>
       <div className="campaign-tabs">
         {campaignTabs.map(([id, label]) => (

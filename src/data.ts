@@ -110,6 +110,252 @@ export interface ChannelPackage {
   notes: string[]
 }
 
+/** A generated content override for one slot, keyed by `${channel}:${item}`. */
+export interface SlotOverride {
+  content: string
+  state: string
+}
+
+/**
+ * Brand / campaign grounding fed to the LLM as context so generated copy stays
+ * on-brand for "Behind Every Original". Mirrors the on-screen message
+ * architecture and grounding package in the Create tab.
+ */
+export const campaignGrounding = {
+  campaign: 'Behind Every Original',
+  coreMessage: 'Originality has a story, and denim is part of how it is expressed.',
+  productEmphasis: '578™ Baggy silhouette, movement and 1990s attitude.',
+  proofPoint: 'Waist-sitting, non-stretch, baggy fit through the leg.',
+  cta: 'Explore the 578™ collection.',
+  protectedElements: 'Campaign name, Levi’s brand marks, approved product names.',
+}
+
+export const OPENAI_MODELS = ['gpt-4o-mini', 'gpt-4o', 'gpt-4.1-mini', 'gpt-4.1'] as const
+
+/** A user-created campaign and the content generated for it. */
+export interface Campaign {
+  id: string
+  name: string
+  brief: string
+  product: string
+  audience: string
+  tone: string
+  market: string
+  locale: string
+  /** selected marketing-channel ids (see marketingChannels) */
+  channels: string[]
+  /** generated content keyed by `${channel}:${item}` */
+  generated: Record<string, string>
+  createdAt: string
+}
+
+export const TONES = ['Playful', 'Confident', 'Editorial', 'Minimal', 'Bold', 'Warm', 'Premium'] as const
+
+/** A real marketing channel and the content pieces it needs. */
+export interface MarketingChannel {
+  id: string
+  label: string
+  desc: string
+  slots: { item: string; constraint: string }[]
+}
+
+export const marketingChannels: MarketingChannel[] = [
+  {
+    id: 'instagram',
+    label: 'Instagram',
+    desc: 'Feed, Stories and Reels',
+    slots: [
+      { item: 'Feed caption', constraint: 'Engaging caption, ~125 characters before truncation' },
+      { item: 'Story text', constraint: 'Short overlay text, under 40 characters' },
+      { item: 'Reel hook', constraint: 'Scroll-stopping first line, under 60 characters' },
+      { item: 'Hashtags', constraint: '5–8 relevant hashtags' },
+      { item: 'Image alt text', constraint: 'Accessible description of the visual' },
+    ],
+  },
+  {
+    id: 'facebook',
+    label: 'Facebook',
+    desc: 'Feed posts and link ads',
+    slots: [
+      { item: 'Post copy', constraint: 'Conversational post, 1–3 short sentences' },
+      { item: 'Headline', constraint: 'Link headline, under 40 characters' },
+      { item: 'Link description', constraint: 'Supporting description, under 30 words' },
+      { item: 'Call to action', constraint: 'Short CTA phrase' },
+    ],
+  },
+  {
+    id: 'seo',
+    label: 'SEO / Website',
+    desc: 'Search and landing pages',
+    slots: [
+      { item: 'Page title', constraint: 'SEO title tag, under 60 characters' },
+      { item: 'Meta description', constraint: 'Search snippet, under 155 characters' },
+      { item: 'H1 headline', constraint: 'Primary on-page headline' },
+      { item: 'Product description', constraint: '2–3 sentence benefit-led description' },
+    ],
+  },
+  {
+    id: 'email',
+    label: 'Email',
+    desc: 'CRM and newsletters',
+    slots: [
+      { item: 'Subject line', constraint: 'Compelling subject, under 45 characters' },
+      { item: 'Preheader', constraint: 'Preview text, under 90 characters' },
+      { item: 'Hero headline', constraint: 'Above-the-fold headline' },
+      { item: 'Body copy', constraint: 'Short body paragraph, 2–3 sentences' },
+      { item: 'Call to action', constraint: 'Button label, under 25 characters' },
+    ],
+  },
+  {
+    id: 'tiktok',
+    label: 'TikTok',
+    desc: 'Short-form video',
+    slots: [
+      { item: 'Video hook', constraint: 'On-screen hook for the first 2 seconds' },
+      { item: 'Caption', constraint: 'Caption with personality, under 100 characters' },
+      { item: 'Hashtags', constraint: '3–5 trend-aware hashtags' },
+    ],
+  },
+  {
+    id: 'google-ads',
+    label: 'Google Ads',
+    desc: 'Search and display',
+    slots: [
+      { item: 'Headline 1', constraint: 'Responsive search ad headline, under 30 characters' },
+      { item: 'Headline 2', constraint: 'Second headline, under 30 characters' },
+      { item: 'Long headline', constraint: 'Display long headline, under 90 characters' },
+      { item: 'Description', constraint: 'Ad description, under 90 characters' },
+    ],
+  },
+  {
+    id: 'x',
+    label: 'X (Twitter)',
+    desc: 'Posts and threads',
+    slots: [
+      { item: 'Post', constraint: 'Single post, under 280 characters' },
+      { item: 'Thread hook', constraint: 'Opening line to start a thread' },
+    ],
+  },
+  {
+    id: 'youtube',
+    label: 'YouTube',
+    desc: 'Video listing copy',
+    slots: [
+      { item: 'Video title', constraint: 'Click-worthy title, under 70 characters' },
+      { item: 'Description', constraint: 'First 2 lines shown above the fold' },
+      { item: 'Tags', constraint: '6–10 relevant tags' },
+    ],
+  },
+]
+
+/** Look up a marketing channel by id. */
+export const findChannel = (id: string): MarketingChannel | undefined => marketingChannels.find((c) => c.id === id)
+
+/** A portfolio campaign shown in the full workspace (Overview header + snapshot). */
+export interface WorkspaceCampaign {
+  id: string
+  name: string
+  /** header line under the title, e.g. "Global campaign · 4 markets · Feb–Mar 2026" */
+  subtitle: string
+  status: string
+  objective: string
+  products: string
+  markets: string
+  channels: string
+  sources: string
+  completeness: number
+  readiness: number
+  readyOf: string
+  openRisks: string
+  risksNote: string
+  reuse: number
+}
+
+export const DEFAULT_CAMPAIGN = 'beo'
+
+export const workspaceCampaigns: Record<string, WorkspaceCampaign> = {
+  beo: {
+    id: 'beo',
+    name: 'Behind Every Original',
+    subtitle: 'Global campaign · 4 markets · Feb–Mar 2026',
+    status: 'At Risk',
+    objective: 'Celebrate original voices shaping culture and connect their stories to Levi’s products and self-expression.',
+    products: 'Low Slim Bootcut, 578™ Baggy, Relaxed Trucker',
+    markets: 'United States, France, Japan and India',
+    channels: 'E-commerce, social, CRM and paid display',
+    sources: 'Workfront, AEM Assets and commerce data · reconciled 18 min ago',
+    completeness: 89,
+    readiness: 72,
+    readyOf: '12 of 18 requirements ready',
+    openRisks: '6',
+    risksNote: '2 blocked · 4 at risk',
+    reuse: 61,
+  },
+  football: {
+    id: 'football',
+    name: 'Football Federation Partnerships',
+    subtitle: 'Partner campaign · 4 federations · 2026',
+    status: 'At Risk',
+    objective: 'Coordinate four football federation partnerships and connect their crests and stories to Levi’s co-branded product.',
+    products: 'Co-branded Trucker, 501® Original',
+    markets: 'United States, France, England and Mexico',
+    channels: 'Social, retail and CRM',
+    sources: 'Workfront, partner rights registry and AEM · reconciled 30 min ago',
+    completeness: 76,
+    readiness: 58,
+    readyOf: '10 of 20 requirements ready',
+    openRisks: '5',
+    risksNote: 'Partner sign-off pending',
+    reuse: 40,
+  },
+  thermodapt: {
+    id: 'thermodapt',
+    name: '501® Thermodapt',
+    subtitle: 'Product innovation · 3 markets · 2026',
+    status: 'Blocked',
+    objective: 'Launch the 501® Thermodapt with temperature-regulation storytelling grounded in approved evidence.',
+    products: '501® Thermodapt',
+    markets: 'United States, France and Japan',
+    channels: 'E-commerce, social and paid display',
+    sources: 'Workfront, legal claims register and commerce data',
+    completeness: 62,
+    readiness: 44,
+    readyOf: '8 of 18 requirements ready',
+    openRisks: '4',
+    risksNote: 'Claim approval blocked',
+    reuse: 30,
+  },
+  reimagine: {
+    id: 'reimagine',
+    name: 'REIIMAGINE / Denim Cowboy',
+    subtitle: 'Historical campaign · Global archive',
+    status: 'Published',
+    objective: 'A completed campaign retained as creative reference and content memory — not for direct reuse.',
+    products: 'Archive collection',
+    markets: 'Global archive',
+    channels: 'Archive',
+    sources: 'Archived campaign record',
+    completeness: 100,
+    readiness: 100,
+    readyOf: 'Complete',
+    openRisks: '0',
+    risksNote: 'None · archived',
+    reuse: 100,
+  },
+}
+
+/** Suggested locale per market (used to prefill the campaign form). */
+export const marketLocales: Record<string, string> = {
+  'United States': 'en-US',
+  France: 'fr-FR',
+  Japan: 'ja-JP',
+  India: 'en-IN',
+  'United Kingdom': 'en-GB',
+  Germany: 'de-DE',
+  Mexico: 'es-MX',
+  Global: 'en',
+}
+
 export const packages: Record<ChannelId, ChannelPackage> = {
   ecommerce: {
     title: 'E-commerce package',

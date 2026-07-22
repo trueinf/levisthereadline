@@ -1,7 +1,9 @@
 import type { CSSProperties, ReactNode } from 'react'
 import { useApp } from '../context'
 import { s } from '../style'
-import type { CampaignTabId } from '../data'
+import { findChannel, type CampaignTabId } from '../data'
+
+const CREATED_ARTS = ['alt', 'gold', 'purple', '']
 
 /** Maps a status label to the CSS modifier class used in the prototype. */
 export function statusClass(label: string): string {
@@ -82,22 +84,37 @@ export function PageHeader({
 }
 
 export function CampaignCards() {
-  const { navigate } = useApp()
+  const { campaigns, openCampaign, openWorkspace } = useApp()
   return (
     <div className="grid grid-4">
-      <article className="card campaign-card soft-lift" style={s('cursor:pointer')} onClick={() => navigate('campaign', 'overview')}>
+      {campaigns.map((c, i) => {
+        const total = c.channels.reduce((n, id) => n + (findChannel(id)?.slots.length ?? 0), 0)
+        const done = Object.keys(c.generated).length
+        const pct = total ? Math.round((done / total) * 100) : 0
+        return (
+          <article key={c.id} className="card campaign-card soft-lift" style={s('cursor:pointer')} onClick={() => openCampaign(c.id)}>
+            <div className={`campaign-art ${CREATED_ARTS[i % CREATED_ARTS.length]}`}><span className="status ready">Yours</span><div className="corner" /></div>
+            <div className="content">
+              <h3>{c.name || 'Untitled campaign'}</h3>
+              <div className="meta-row"><span>{c.market}</span><span>{c.channels.length} channel{c.channels.length === 1 ? '' : 's'}</span></div>
+              <div className="progress" style={s('margin-top:16px')}><span style={s(`width:${pct}%`)} /></div>
+            </div>
+          </article>
+        )
+      })}
+      <article className="card campaign-card soft-lift" style={s('cursor:pointer')} onClick={() => openWorkspace('beo')}>
         <div className="campaign-art"><span className="status risk">At Risk</span><div className="corner" /></div>
         <div className="content"><h3>Behind Every Original</h3><div className="meta-row"><span>4 markets</span><span>18 variants</span></div><div className="progress" style={s('margin-top:16px')}><span style={s('width:72%')} /></div></div>
       </article>
-      <article className="card campaign-card soft-lift">
+      <article className="card campaign-card soft-lift" style={s('cursor:pointer')} onClick={() => openWorkspace('football')}>
         <div className="campaign-art alt"><span className="status review">Partner review</span><div className="corner" /></div>
         <div className="content"><h3>Football Federation Partnerships</h3><div className="meta-row"><span>4 federations</span><span>Launch orchestration</span></div><div className="progress" style={s('margin-top:16px')}><span style={s('width:58%')} /></div></div>
       </article>
-      <article className="card campaign-card soft-lift">
+      <article className="card campaign-card soft-lift" style={s('cursor:pointer')} onClick={() => openWorkspace('thermodapt')}>
         <div className="campaign-art gold"><span className="status blocked">Claim blocked</span><div className="corner" /></div>
         <div className="content"><h3>501® Thermodapt</h3><div className="meta-row"><span>Product innovation</span><span>3 markets</span></div><div className="progress" style={s('margin-top:16px')}><span style={s('width:44%')} /></div></div>
       </article>
-      <article className="card campaign-card soft-lift">
+      <article className="card campaign-card soft-lift" style={s('cursor:pointer')} onClick={() => openWorkspace('reimagine')}>
         <div className="campaign-art purple"><span className="status neutral">Historical</span><div className="corner" /></div>
         <div className="content"><h3>REIIMAGINE / Denim Cowboy</h3><div className="meta-row"><span>Content memory</span><span>Learning</span></div><div className="progress" style={s('margin-top:16px')}><span style={s('width:100%')} /></div></div>
       </article>

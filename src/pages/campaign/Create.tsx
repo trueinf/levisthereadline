@@ -1,7 +1,10 @@
+import { useState } from 'react'
 import { useApp } from '../../context'
 import { s } from '../../style'
 import { Btn, PageHeader, Status } from '../../components/common'
 import { packages, type ChannelId } from '../../data'
+import { generateContent } from '../../api'
+import { NEEDS_CONTENT, systemPrompt, userPrompt, type Row } from '../../generation'
 
 const channelTabs: [ChannelId, string][] = [
   ['ecommerce', 'E-commerce'],
@@ -12,30 +15,78 @@ const channelTabs: [ChannelId, string][] = [
 ]
 
 function ChannelWorkspace() {
-  const { createChannel, openCreate, toast } = useApp()
-  const p = packages[createChannel]
-  const headStatusRisk = p.status.includes('missing') || p.status.includes('review')
+  const { createChannel, openCreate, toast, model, overrides, setOverride } = useApp()
+  const pkg = packages[createChannel]
+  const [busy, setBusy] = useState<string | null>(null) // item name, or '__all__'
+
+  // Apply any generated overrides on top of the static seed rows.
+  const rows: Row[] = pkg.rows.map((r) => {
+    const ov = overrides[`${createChannel}:${r[0]}`]
+    return ov ? [r[0], ov.content, ov.state, r[3], r[4]] : r
+  })
+
+  async function genOne(row: Row) {
+    setBusy(row[0])
+    try {
+      const text = await generateContent({ model, system: systemPrompt(pkg), user: userPrompt(pkg, row) })
+      setOverride(`${createChannel}:${row[0]}`, { content: text, state: 'Generated' })
+      toast(`Generated: ${row[0]}`)
+    } catch (err) {
+      toast(`Generation failed — ${err instanceof Error ? err.message : String(err)}`)
+    } finally {
+      setBusy(null)
+    }
+  }
+
+  async function genMissing() {
+    const targets = rows.filter((r) => NEEDS_CONTENT(r[2]))
+    if (targets.length === 0) {
+      toast('No missing content in this package')
+      return
+    }
+    setBusy('__all__')
+    try {
+      for (const row of targets) {
+        const text = await generateContent({ model, system: systemPrompt(pkg), user: userPrompt(pkg, row) })
+        setOverride(`${createChannel}:${row[0]}`, { content: text, state: 'Generated' })
+      }
+      toast(`Generated ${targets.length} item${targets.length > 1 ? 's' : ''} with ${model}`)
+    } catch (err) {
+      toast(`Generation failed — ${err instanceof Error ? err.message : String(err)}`)
+    } finally {
+      setBusy(null)
+    }
+  }
+
+  const headStatusRisk = pkg.status.includes('missing') || pkg.status.includes('review')
+  const busyAll = busy === '__all__'
 
   return (
     <div className="card card-pad">
       <div className="card-head">
-        <div><h2>{p.title}</h2><p>{p.subtitle}</p></div>
-        <span className={`status ${headStatusRisk ? 'risk' : 'ready'}`}>{p.status}</span>
+        <div><h2>{pkg.title}</h2><p>{pkg.subtitle}</p></div>
+        <span className={`status ${headStatusRisk ? 'risk' : 'ready'}`}>{pkg.status}</span>
       </div>
 
       <table className="slot-table">
-        <thead><tr><th>Content item</th><th>Current content</th><th>State</th><th>Purpose / constraint</th><th>Model route</th></tr></thead>
+        <thead><tr><th>Content item</th><th>Current content</th><th>State</th><th>Purpose / constraint</th><th>Model route</th><th /></tr></thead>
         <tbody>
-          {p.rows.map((r, i) => {
-            const stateLabel = r[2] === 'Missing' || r[2] === 'Under review' || r[2] === 'At Risk' ? 'At Risk' : 'Ready'
+          {rows.map((r, i) => {
+            const rowBusy = busy === r[0]
+            const stateLabel = NEEDS_CONTENT(r[2]) ? 'At Risk' : 'Ready'
             const routeCls = r[4].includes('SLM') ? 'private' : r[4].includes('specialist') ? 'specialist' : ''
             return (
               <tr key={i}>
                 <td><div className="slot-name">{r[0]}</div></td>
-                <td>{r[1]}</td>
+                <td>{rowBusy ? <span style={s('color:var(--muted)')}>Generating…</span> : r[1]}</td>
                 <td><Status label={stateLabel} /></td>
                 <td><div className="slot-detail">{r[3]}</div></td>
                 <td><span className={`model-chip ${routeCls}`}>{r[4]}</span></td>
+                <td style={s('text-align:right')}>
+                  <button className="btn btn-light btn-sm" disabled={busy != null} onClick={() => genOne(pkg.rows[i])}>
+                    {rowBusy ? '…' : NEEDS_CONTENT(r[2]) ? 'Generate' : 'Regenerate'}
+                  </button>
+                </td>
               </tr>
             )
           })}
@@ -43,19 +94,22 @@ function ChannelWorkspace() {
       </table>
 
       <div className="workload-line" style={s('margin:14px 0 0')}>
-        {p.notes.map((n) => <span key={n}>{n}</span>)}
+        {pkg.notes.map((n) => <span key={n}>{n}</span>)}
       </div>
 
       <div className="channel-actions">
-        <button className="btn btn-light" onClick={openCreate}>Create new {p.title.toLowerCase()} variant</button>
-        <button className="btn btn-primary" onClick={() => toast(`${p.primary} — prototype action`)}>{p.primary}</button>
+        <button className="btn btn-light" onClick={openCreate}>Create new {pkg.title.toLowerCase()} variant</button>
+        <button className="btn btn-primary" disabled={busy != null} onClick={genMissing}>
+          {busyAll ? 'Generating…' : pkg.primary}
+        </button>
       </div>
     </div>
   )
 }
 
+
 export function Create() {
-  const { createChannel, setCreateChannel, openCreate } = useApp()
+  const { createChannel, setCreateChannel, openCreate, model } = useApp()
   return (
     <>
       <PageHeader
@@ -63,7 +117,7 @@ export function Create() {
         title="Create"
         sub="Create directly for any approved channel or complete the content gaps routed from Assemble, while Threadline preserves one coherent message architecture across every output."
         action={
-          <div style={s('display:flex;gap:9px')}>
+          <div style={s('display:flex;gap:9px;align-items:center')}>
             <Btn label="View creation queue" cls="btn-light" />
             <button className="btn btn-primary" onClick={openCreate}>Create content</button>
           </div>
@@ -123,7 +177,8 @@ export function Create() {
             <div className="eyebrow">Recommended private model</div>
             <h3>Levi’s SLM v0.9</h3>
             <p style={s('font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:12px')}>Used automatically for approved product, fit, wash, CTA, SEO and routine channel language.</p>
-            <div className="model-stat"><span>Hosting</span><b>Private Levi’s environment</b></div>
+            <div className="model-stat"><span>Active generation model</span><b>{model}</b></div>
+            <div className="model-stat"><span>Hosting</span><b>OpenAI · via dev proxy</b></div>
             <div className="model-stat"><span>Brand baseline</span><b>v1.0 current</b></div>
             <div className="model-stat"><span>Product catalogue</span><b>Synced 22m ago</b></div>
             <div className="model-stat"><span>Product accuracy history</span><b>98%</b></div>

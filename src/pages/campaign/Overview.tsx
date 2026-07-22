@@ -1,9 +1,11 @@
 import { useApp } from '../../context'
 import { s } from '../../style'
 import { VariantBtn } from '../../components/common'
+import { workspaceCampaigns } from '../../data'
 
 export function Overview() {
-  const { setCampaignTab, toast } = useApp()
+  const { setCampaignTab, toast, workspaceCampaignId } = useApp()
+  const c = workspaceCampaigns[workspaceCampaignId] ?? workspaceCampaigns.beo
   return (
     <>
       <section className="card card-pad" style={s('padding:0;overflow:hidden;margin-bottom:18px')}>
@@ -15,21 +17,21 @@ export function Overview() {
             <div style={s('position:absolute;right:9%;top:11%;width:220px;height:270px;border-radius:110px 110px 30px 30px;background:rgba(255,255,255,.20);transform:rotate(-5deg)')} />
             <div style={s('position:absolute;right:5%;bottom:20px;width:330px;height:74px;background:rgba(10,10,10,.48)')} />
             <div style={s('position:absolute;left:34px;bottom:30px;color:#fff;z-index:2')}>
-              <div style={s('font-size:12px;letter-spacing:1.2px;text-transform:uppercase;opacity:.78;margin-bottom:6px')}>Global master · 2026</div>
-              <div style={s('font-size:34px;font-weight:850;letter-spacing:-1.4px')}>Behind Every Original</div>
+              <div style={s('font-size:12px;letter-spacing:1.2px;text-transform:uppercase;opacity:.78;margin-bottom:6px')}>{c.subtitle}</div>
+              <div style={s('font-size:34px;font-weight:850;letter-spacing:-1.4px')}>{c.name}</div>
             </div>
           </div>
 
           <div style={s('padding:28px 30px;background:var(--paper)')}>
             <div className="eyebrow">Campaign brief snapshot</div>
-            <h2 style={s('font-size:30px;margin-bottom:10px')}>89% complete</h2>
-            <p className="subhead" style={s('font-size:13px;margin-bottom:20px')}>Threadline has reconciled the connected campaign sources, identified two launch-blocking findings and prepared a governed baseline for downstream agents.</p>
+            <h2 style={s('font-size:30px;margin-bottom:10px')}>{c.completeness}% complete</h2>
+            <p className="subhead" style={s('font-size:13px;margin-bottom:20px')}>Threadline has reconciled the connected campaign sources, identified the launch-blocking findings and prepared a governed baseline for downstream agents.</p>
 
-            <div className="detail-pair"><span>Objective</span><b>Celebrate original voices shaping culture and connect their stories to Levi’s products and self-expression.</b></div>
-            <div className="detail-pair"><span>Products</span><b>Low Slim Bootcut, 578™ Baggy, Relaxed Trucker</b></div>
-            <div className="detail-pair"><span>Markets</span><b>United States, France, Japan and India</b></div>
-            <div className="detail-pair"><span>Channels</span><b>E-commerce, social, CRM and paid display</b></div>
-            <div className="detail-pair"><span>Sources</span><b>Workfront, AEM Assets and commerce data · reconciled 18 min ago</b></div>
+            <div className="detail-pair"><span>Objective</span><b>{c.objective}</b></div>
+            <div className="detail-pair"><span>Products</span><b>{c.products}</b></div>
+            <div className="detail-pair"><span>Markets</span><b>{c.markets}</b></div>
+            <div className="detail-pair"><span>Channels</span><b>{c.channels}</b></div>
+            <div className="detail-pair"><span>Sources</span><b>{c.sources}</b></div>
 
             <div style={s('display:flex;gap:10px;margin-top:20px')}>
               <button className="btn btn-primary" onClick={() => setCampaignTab('brief')}>Review findings</button>
@@ -40,10 +42,10 @@ export function Overview() {
       </section>
 
       <div className="grid grid-4" style={s('margin-top:18px')}>
-        <div className="card metric"><div className="metric-label">Brief completeness</div><div className="metric-value">89%</div><div className="metric-note">2 unresolved inputs</div></div>
-        <div className="card metric"><div className="metric-label">Overall readiness</div><div className="metric-value">72%</div><div className="metric-note">12 of 18 requirements ready</div></div>
-        <div className="card metric"><div className="metric-label">Open risks</div><div className="metric-value">6</div><div className="metric-note">2 blocked · 4 at risk</div></div>
-        <div className="card metric"><div className="metric-label">Content reuse</div><div className="metric-value">61%</div><div className="metric-note">Before new generation</div></div>
+        <div className="card metric"><div className="metric-label">Brief completeness</div><div className="metric-value">{c.completeness}%</div><div className="metric-note">Baseline fields confirmed</div></div>
+        <div className="card metric"><div className="metric-label">Overall readiness</div><div className="metric-value">{c.readiness}%</div><div className="metric-note">{c.readyOf}</div></div>
+        <div className="card metric"><div className="metric-label">Open risks</div><div className="metric-value">{c.openRisks}</div><div className="metric-note">{c.risksNote}</div></div>
+        <div className="card metric"><div className="metric-label">Content reuse</div><div className="metric-value">{c.reuse}%</div><div className="metric-note">Before new generation</div></div>
       </div>
 
       <div className="layout-main" style={s('margin-top:20px')}>
