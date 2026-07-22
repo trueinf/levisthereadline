@@ -33,9 +33,10 @@ function CampaignNav() {
 }
 
 export function Campaign() {
-  const { campaignTab } = useApp()
+  const { campaignTab, navigate } = useApp()
   return (
     <div className="page">
+      <button className="btn btn-light btn-sm" style={s('margin-bottom:16px')} onClick={() => navigate('campaigns')}>← Back to Campaigns</button>
       <CampaignNav />
       {campaignTab === 'overview' && <Overview />}
       {campaignTab === 'brief' && <Brief />}
