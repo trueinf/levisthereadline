@@ -12,7 +12,7 @@ dist
 dist-ssr
 *.local
 
-# Environment / secrets (OpenAI key lives here)
+# Environment / secrets (OpenAI key lives here, read by server/config.js)
 .env
 .env.*
 !.env.example

@@ -12,4 +12,5 @@ The "Behind Every Original" campaign uses `/campaign-hero.webp` in two places:
 **Save your campaign image here as `campaign-hero.webp`** (this exact name). Until
 the file exists, both placeholders fall back to the original gradient.
 
-Commit the image so it also deploys to Netlify.
+Commit the image so `npm run build` copies it into `dist/`, which the backend
+serves in production.
