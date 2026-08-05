@@ -1,8 +1,10 @@
 /**
- * Client helper for content generation. Posts to the dev-server proxy at
- * /api/generate (see vite.config.ts), which forwards to OpenAI with the
- * server-side API key. Returns the generated text, or throws with a
- * human-readable message.
+ * Client helpers for content generation. Both post to the Node/Express backend
+ * in `server/` — /api/generate and /api/image — which attaches the server-side
+ * OpenAI key and forwards the request. In development Vite proxies /api to that
+ * backend (see vite.config.ts); in production the backend serves this bundle,
+ * so the calls are same-origin either way. Each returns the result, or throws
+ * with a human-readable message.
  */
 export interface GenerateParams {
   system: string
@@ -29,7 +31,7 @@ export async function generateContent(params: GenerateParams): Promise<string> {
       }),
     })
   } catch {
-    throw new Error('Could not reach the generation server. Is the dev server running?')
+    throw new Error('Could not reach the generation API. Is the backend running (npm run dev)?')
   }
 
   let data: any
@@ -51,7 +53,7 @@ export async function generateContent(params: GenerateParams): Promise<string> {
 }
 
 /**
- * Generate an image via the /api/image proxy. Returns a data URL
+ * Generate an image via the /api/image backend route. Returns a data URL
  * (`data:image/png;base64,...`) so it renders and downloads without expiry.
  */
 export async function generateImage(params: { prompt: string; size?: string; model?: string }): Promise<string> {
@@ -63,7 +65,7 @@ export async function generateImage(params: { prompt: string; size?: string; mod
       body: JSON.stringify({ prompt: params.prompt, size: params.size, model: params.model }),
     })
   } catch {
-    throw new Error('Could not reach the image server. Is the dev server running?')
+    throw new Error('Could not reach the image API. Is the backend running (npm run dev)?')
   }
 
   let data: any
