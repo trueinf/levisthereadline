@@ -130,7 +130,7 @@ export const campaignGrounding = {
   protectedElements: 'Campaign name, Levi’s brand marks, approved product names.',
 }
 
-export const OPENAI_MODELS = ['gpt-4o-mini', 'gpt-4o', 'gpt-4.1-mini', 'gpt-4.1'] as const
+export const OPENAI_MODELS = ['gpt-5.4'] as const
 
 /** A user-created campaign and the content generated for it. */
 export interface Campaign {

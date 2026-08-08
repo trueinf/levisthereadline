@@ -15,18 +15,21 @@ import { log } from './logger.js'
  * @returns {Promise<{status: number, data: object}>}
  */
 export async function callOpenAI(path, payload, { timeoutMs = config.textTimeoutMs } = {}) {
+  console.log(path)
+  console.log(config.openaiApiKey)
   if (!config.openaiApiKey) {
     throw new ApiError(503, 'OPENAI_API_KEY is not set on the server. Add it to .env and restart the API.')
   }
 
   const headers = {
     'content-type': 'application/json',
-    authorization: `Bearer ${config.openaiApiKey}`,
+    'api-key': config.openaiApiKey
   }
 
   const startedAt = process.hrtime.bigint()
   let upstream
   try {
+console.log(`${config.openaiBaseUrl}${path}`)
     upstream = await fetch(`${config.openaiBaseUrl}${path}`, {
       method: 'POST',
       headers,

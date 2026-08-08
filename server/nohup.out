@@ -1,0 +1,5 @@
+2026-08-05T12:54:50.194Z INFO  no build found — running API only (this is normal with `npm run dev`).
+2026-08-05T12:54:50.200Z INFO  threadline-server API v1.1.0 listening {"url":"http://localhost:8787","env":"development","openaiConfigured":true}
+2026-08-05T12:54:55.488Z INFO  openai call {"path":"/images/generations","status":401,"ms":555}
+2026-08-05T12:54:55.488Z WARN  openai error {"path":"/images/generations","status":401,"message":"Incorrect API key provided: Ckfrjd71*************************************************************************tdlb. You can find your API key at https://platform.openai.com/account/api-keys."}
+2026-08-05T12:54:55.493Z INFO  POST /api/image 401 {"ms":570}

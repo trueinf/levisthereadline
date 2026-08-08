@@ -52,16 +52,16 @@ export const config = Object.freeze({
   /** Behind a load balancer in production, so rate limiting sees real client IPs. */
   trustProxy: isProduction ? 1 : false,
 
-  openaiBaseUrl: 'https://api.openai.com/v1',
+  openaiBaseUrl: process.env.OPENAI_API_SERVER?.trim() || 'https://api.openai.com/v1',
   /** Text is fast; image generation legitimately runs 10-30s+. */
   textTimeoutMs: 60_000,
   imageTimeoutMs: 180_000,
 
   /** Allow-lists — the proxy spends a real API key, so keep it bounded. */
-  textModels: ['gpt-4o-mini', 'gpt-4o', 'gpt-4.1-mini', 'gpt-4.1'],
-  imageModels: ['gpt-image-1'],
-  defaultTextModel: 'gpt-4o-mini',
-  defaultImageModel: 'gpt-image-1',
+  textModels: ['gpt-5.4'],
+  imageModels: ['gpt-5.4'],
+  defaultTextModel: 'gpt-5.4',
+  defaultImageModel: 'gpt-5.4',
   maxOutputTokens: 4000,
   maxPromptChars: 8000,
 

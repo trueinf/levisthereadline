@@ -17,7 +17,7 @@ router.post(
 
     const messages = requireMessages(body.messages, { maxChars: config.maxPromptChars })
     const model = optionalEnum(body.model, 'model', config.textModels, config.defaultTextModel)
-    const temperature = optionalNumber(body.temperature, 'temperature', { fallback: 0.7, min: 0, max: 2 })
+    const temperature = 1
     const maxTokens = optionalNumber(body.max_tokens, 'max_tokens', {
       fallback: 400,
       min: 1,
@@ -27,7 +27,7 @@ router.post(
 
     const { status, data } = await callOpenAI(
       '/chat/completions',
-      { model, messages, temperature, max_tokens: maxTokens },
+      { model, messages, temperature, max_completion_tokens: maxTokens },
       { timeoutMs: config.textTimeoutMs },
     )
 

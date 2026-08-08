@@ -70,7 +70,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [createOpen, setCreateOpen] = useState(false)
   const [toastText, setToastText] = useState('Action completed')
   const [toastVisible, setToastVisible] = useState(false)
-  const [model, setModel] = useState('gpt-4o-mini')
+  const [model, setModel] = useState('gpt-5.4')
   const [overrides, setOverrides] = useState<Record<string, SlotOverride>>({})
   const [campaigns, setCampaigns] = useState<Campaign[]>([])
   const [builderId, setBuilderId] = useState<BuilderId>(null)
