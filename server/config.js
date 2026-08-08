@@ -53,15 +53,16 @@ export const config = Object.freeze({
   trustProxy: isProduction ? 1 : false,
 
   openaiBaseUrl: process.env.OPENAI_API_SERVER?.trim() || 'https://api.openai.com/v1',
+  openaiBaseImageUrl: process.env.MAI_API_SERVER?.trim() || 'https://api.openai.com/v1',
   /** Text is fast; image generation legitimately runs 10-30s+. */
   textTimeoutMs: 60_000,
   imageTimeoutMs: 180_000,
 
   /** Allow-lists — the proxy spends a real API key, so keep it bounded. */
   textModels: ['gpt-5.4'],
-  imageModels: ['gpt-5.4'],
+  imageModels: ['MAI-Image-2.5-pro'],
   defaultTextModel: 'gpt-5.4',
-  defaultImageModel: 'gpt-5.4',
+  defaultImageModel: 'MAI-Image-2.5-pro',
   maxOutputTokens: 4000,
   maxPromptChars: 8000,
 

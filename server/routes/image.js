@@ -5,7 +5,7 @@
 
 import { Router } from 'express'
 import { config } from '../config.js'
-import { callOpenAI } from '../lib/openai.js'
+import { callmai } from '../lib/mai.js'
 import { asyncHandler, methodNotAllowed } from '../lib/http.js'
 import { optionalEnum, optionalNumber, requireString } from '../lib/validate.js'
 
@@ -25,7 +25,7 @@ router.post(
     const quality = optionalEnum(body.quality, 'quality', QUALITIES, 'medium')
     const n = optionalNumber(body.n, 'n', { fallback: 1, min: 1, max: 4, integer: true })
 
-    const { status, data } = await callOpenAI(
+    const { status, data } = await callmai(
       '/images/generations',
       { model, prompt, size, quality, n },
       { timeoutMs: config.imageTimeoutMs },
